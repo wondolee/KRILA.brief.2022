@@ -1,0 +1,104 @@
+---
+title: "KRILA brief"
+author: "Won Do Lee"
+date: '2022-06-15'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+setwd("d:/WORKSPACE/GIT/KRILA.brief.2022/code/")
+rm(list=ls())
+require(httr)
+require(jsonlite)
+ex.api.key<-"6053949007"
+vworld.api.key<-"B171760D-757D-3817-A49B-F2C8CBCB4711"
+```
+
+## Service station data retrived from ex API service
+```{r data download using API service, fig.height=150, fig.width=150, paged.print=TRUE}
+ex.api<-"http://data.ex.co.kr/openapi/business/conveniServiceArea"
+ex.url<-paste0(ex.api,"?key=",ex.api.key,"&type=json")
+
+test<-fromJSON(ex.url)
+test$count #203 service stations
+
+#download lists of service stations by pages
+raw.data.01<-fromJSON(paste0(ex.url,"&numOfRows=100&pageNo=1"))
+raw.data.02<-fromJSON(paste0(ex.url,"&numOfRows=100&pageNo=2"))
+raw.data.03<-fromJSON(paste0(ex.url,"&numOfRows=100&pageNo=3"))
+
+data.01<-as.data.frame(raw.data.01$list)
+data.02<-as.data.frame(raw.data.02$list)
+data.03<-as.data.frame(raw.data.03$list)
+data<-rbind(data.01,data.02,data.03)
+
+require(dplyr)
+data<-select(data,-c(pageNo,numOfRows))
+data[6,]<-c("NA","영동선","A00648","안산(인천)휴게소","031-482-7775",
+            "탐앤탐스 외","500","NA","경기도 안산시 단원구 선부3동 285-18","NA",
+            "X","X")
+write.csv(data,"tbl.service.stations.csv")
+addresses<-data[c("serviceAreaCode","serviceAreaName")]
+addresses$serviceAreaName<-str_trim(addresses$serviceAreaName,side="both")
+```
+## Gecoding
+````{place API}
+vworld.api<-"http://api.vworld.kr/req/search?"
+require(rvest)
+require(XML)
+require(tibble)
+require(sf)
+geocoding.data<-list()
+fin=list()
+
+for(i in 1:nrow(addresses)){
+  vworld.url<-paste0(vworld.api,"service=search&request=search&version=2.0&crs=EPSG:4326&query=",
+                     addresses$serviceAreaName[i],"&type=place&format=xml&errorformat=xml&key=",
+                     vworld.api.key)
+  #geocoding.data[[i]]<-GET(vworld.url)
+  #test<-geocoding.data[[i]] %>% content(as = 'text')
+  geocoding.data[[i]]<-xmlTreeParse(vworld.url,useInternalNode=T, encoding="utf-8")
+  rootNode<-xmlRoot(geocoding.data[[i]])
+  basic<-xmlToDataFrame(nodes=getNodeSet(rootNode,"//item"))
+  location<-xmlToDataFrame(nodes=getNodeSet(rootNode,"//item/address"))
+  coordinate<-xmlToDataFrame(nodes=getNodeSet(rootNode,"//item/point"))
+  xmldata<-cbind(basic,location,coordinate)
+  fin[[i]]<-xmldata
+}
+fin<-rbindlist(fin)
+service.loc<-fin %>% select(-address,-point)
+service.loc<-st_as_sf(service.loc,coords=c("x","y"))
+st_write(service.loc,"service.loc.geojson")
+```
+
+```{Geocoding API}
+for(i in 1:nrow(addresses)){
+  vworld.url<-paste0(vworld.api,"service=search&request=search&version=2.0&crs=EPSG:4326&query=",
+                     addresses$serviceAreaName[i],"&type=place&format=xml&errorformat=xml&key=",
+                     vworld.api.key)
+  #geocoding.data[[i]]<-GET(vworld.url)
+  #test<-geocoding.data[[i]] %>% content(as = 'text')
+  geocoding.data[[i]]<-xmlTreeParse(vworld.url,useInternalNode=T, encoding="utf-8")
+  rootNode<-xmlRoot(geocoding.data[[i]])
+  basic<-xmlToDataFrame(nodes=getNodeSet(rootNode,"//item"))
+  location<-xmlToDataFrame(nodes=getNodeSet(rootNode,"//item/address"))
+  coordinate<-xmlToDataFrame(nodes=getNodeSet(rootNode,"//item/point"))
+  xmldata<-cbind(basic,location,coordinate)
+  fin[[i]]<-xmldata
+}
+fin<-rbindlist(fin)
+service.loc<-fin %>% select(-address,-point)
+service.loc<-st_as_sf(service.loc,coords=c("x","y"))
+st_write(service.loc,"service.loc.geojson")
+```
+
+## Measuring accessibility to service stations by car
+```{r}
+
+
+```
