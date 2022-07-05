@@ -26,13 +26,14 @@ data<-select(data,-c(pageNo,numOfRows))
 write.csv(data,"tbl.service.stations.csv")
 
 addresses<-data$svarAddr
-addresses<-data$serviceAreaName
+#addresses<-data$serviceAreaName
 
 vworld.api.key<-"B171760D-757D-3817-A49B-F2C8CBCB4711"
 vworld.api<-"http://api.vworld.kr/req/address?service=address&request=getCoord"
 
 require(rvest)
 require(XML)
+require(data.table)
 
 geocoding.data<-list()
 fin=list()
