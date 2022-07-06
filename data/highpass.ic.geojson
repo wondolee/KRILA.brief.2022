@@ -1,0 +1,23 @@
+{
+"type": "FeatureCollection",
+"name": "highpass",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "icnm": "통도사", "service-da": "2011-12-27", "address": "경상남도 양산시 하북면 경부고속도로 31(순지리)", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 129.090076009249174, 35.488881153666256 ] } },
+{ "type": "Feature", "properties": { "icnm": "양촌", "service-da": "2012-07-25", "address": "충청남도 논산시 양촌면 황산벌로 784번길 93-10", "type": "본선연결", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.216902087849689, 36.15813260719208 ] } },
+{ "type": "Feature", "properties": { "icnm": "삼성", "service-da": "2016-12-20", "address": "충청북도 음성군 삼성면 중부고속도로 52-1", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.483440601664938, 37.020215016480265 ] } },
+{ "type": "Feature", "properties": { "icnm": "남양평", "service-da": "2016-12-21", "address": "경기도 양평군 강상면 지례1길 43-46", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.471852440417294, 37.483869356009841 ] } },
+{ "type": "Feature", "properties": { "icnm": "동둔내", "service-da": "2016-12-21", "address": "강원도 횡성군 둔내면 청태산로 486", "type": "본선연결", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 128.275585648938659, 37.523224965269534 ] } },
+{ "type": "Feature", "properties": { "icnm": "옥산", "service-da": "2016-12-26", "address": "충청북도 청주시 흥덕구 옥산면 경부고속도로 310", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.363634780241298, 36.663950251171251 ] } },
+{ "type": "Feature", "properties": { "icnm": "구병산", "service-da": "2017-12-28", "address": "충청북도 보은군 마로면 적암길 56-17", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.869860905790816, 36.448737248657551 ] } },
+{ "type": "Feature", "properties": { "icnm": "신둔", "service-da": "2017-12-20", "address": "경기도 이천시 신둔면 서이천로853번길 346-129", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.378695683892943, 37.294334122683459 ] } },
+{ "type": "Feature", "properties": { "icnm": "김해가야", "service-da": "2018-02-07", "address": "경상남도 김해시 대동면 동남로 400", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 129.003773637108736, 35.269457907783966 ] } },
+{ "type": "Feature", "properties": { "icnm": "유천", "service-da": "2018-03-29", "address": "대구광역시 달성군 화원읍 구라리 1118-8", "type": "본선연결", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 128.502664713716797, 35.811389933616304 ] } },
+{ "type": "Feature", "properties": { "icnm": "북현풍", "service-da": "2018-05-30", "address": "대구광역시 달성군 현풍읍 성하리 270-17", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 128.435534757586026, 35.703842304687541 ] } },
+{ "type": "Feature", "properties": { "icnm": "임고", "service-da": "2018-12-27", "address": "경상북도 영천시 임고면 포은로 1051-11", "type": "본선연결", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 129.008906799661219, 36.055255415450837 ] } },
+{ "type": "Feature", "properties": { "icnm": "중앙탑", "service-da": "2019-12-30", "address": "충청북도 충주시 중앙탑면 중부내륙고속도로 231", "type": "휴게소", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.836597525650163, 37.021951851347495 ] } },
+{ "type": "Feature", "properties": { "icnm": "서함양", "service-da": "2020-10-19", "address": "경상남도 함양군 병곡면 월암리 26-8", "type": "본선연결", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 127.710536406079839, 35.54331980895757 ] } },
+{ "type": "Feature", "properties": { "icnm": "북구미", "service-da": "2021-12-01", "address": "경상북도 구미시 부곡동 96-4", "type": "본선연결", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 128.301548162511523, 36.142264535256238 ] } },
+{ "type": "Feature", "properties": { "icnm": "불갑산", "service-da": "2021-12-29", "address": "전라남도 영광군 군서면 보라리 79-1", "type": "본선연결", "경도": "정좌표" }, "geometry": { "type": "Point", "coordinates": [ 126.507342537681737, 35.239930236453091 ] } }
+]
+}
