@@ -1,4 +1,4 @@
-"","direction","svarAddr","routeName","telNo","serviceAreaCode","serviceAreaName","brand","routeCode","serviceAreaCode2","convenience","maintenanceYn","truckSaYn"
+﻿"","direction","svarAddr","routeName","telNo","serviceAreaCode","serviceAreaName","brand","routeCode","serviceAreaCode2","convenience","maintenanceYn","truckSaYn"
 "1",NA,"경기 하남시 중부고속도로 117","중부선","031-791-4200","A00006","하남드림휴게소","탐앤탐스","0352","000139","수유실|수면실|","X","X"
 "2",NA,"충북 옥천군 옥천읍중앙로 135","경부선","043-732-0081","A00227","옥천만남의광장휴게소","-","0010","000404","","O","X"
 "3",NA,"경상북도 의성군 단밀면 도안로 757-68","상주영천선","031-481-9758","A00264","낙동강의성(영천)휴게소","드롭탑 외 7","3010","000516","내고장특산물|약국|","X","X"
