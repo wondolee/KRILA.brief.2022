@@ -1,4 +1,4 @@
-![location.map.png](.output/location.map.png]
+![location.map.png](.KRILA.brief.2022/output/location.map.png]
 # A review of regional economic resilience project 
 + 지역경제 활성화 타운의 실효성 제고를 위한 제언 (in Korean)
 
