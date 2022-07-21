@@ -104,7 +104,7 @@ mean.per.tbl.data<-tbl.data %>% dplyr::group_by (Vehicle.types,hh) %>%
 mean.per.tbl.data$per.sta.users<-mean.per.tbl.data$per.sta.users/100
 
 plot.per.users<-ggplot(tbl.data,aes(x=hh,y=per.sta.users/100,fill=Vehicle.types))+
-  geom_bar(fun="mean",stat='summary',position="dodge",width=0.75)+
+  geom_bar(fun="mean",stat='summary',position="stack",width=0.75)+
   #geom_smooth(aes(colour=Vehicle.types),method="loess",span=0.8,se=TRUE)+
   facet_wrap(~highpass.ic,nrow=2)+
   theme_minimal()+
@@ -123,19 +123,19 @@ plot.per.users<-ggplot(tbl.data,aes(x=hh,y=per.sta.users/100,fill=Vehicle.types)
         legend.position="top",
         legend.justification = c("right", "top"),
         axis.title=element_text(size=rel(2),face="bold",family="notosanskr",colour="black"),
-        axis.text.x = element_text(size=rel(1.3),family="notosanskr",colour="black",vjust=rel(10)),
+        axis.text.x = element_text(size=rel(1.3),family="notosanskr",colour="black",vjust=rel(5)),
         axis.text.y = element_text(size=rel(1.5),face="bold",family="notosanskr",colour="black"))
-ggsave(plot.per.users,"png",filename="per.of.service.users.dodge.png",scale=1,width=170,height=120,units=c("mm"),dpi=300,bg="white")
+ggsave(plot.per.users,"png",filename="per.of.service.users.dodge.png",scale=1,width=80,height=80,units=c("mm"),dpi=300,bg="white")
 
 mean.dur.tbl.data<-tbl.data %>% dplyr::group_by (Vehicle.types,hh) %>% 
   dplyr::summarise(dur.v.use.sta=mean(dur.v.use.sta)) %>% ungroup()
 mean.dur.tbl.data$dur.v.use.sta<-mean.dur.tbl.data$dur.v.use.sta/60
 
 plot.dur.users<-ggplot(tbl.data,aes(x=hh,y=dur.v.use.sta/60,fill=Vehicle.types))+
-  geom_bar(fun="mean",stat='summary',position="dodge",width=0.75)+
+  geom_bar(fun="mean",stat='summary',position="stack",width=0.75)+
   #geom_smooth(aes(colour=Vehicle.types),method="loess",span=0.8,se=TRUE)+
   theme_minimal()+
-  facet_wrap(~highpass.ic+week,nrow=2)+
+  facet_wrap(~highpass.ic,nrow=2)+
   labs(x=NULL,y="(평균) 휴게소 체류시간(분)")+
   scale_fill_discrete(name = "차종")+
   scale_y_continuous(labels=scales::label_number(suffix="분"))+
@@ -151,9 +151,9 @@ plot.dur.users<-ggplot(tbl.data,aes(x=hh,y=dur.v.use.sta/60,fill=Vehicle.types))
         legend.position="top",
         legend.justification = c("right", "top"),
         axis.title=element_text(size=rel(2),face="bold",family="notosanskr",colour="black"),
-        axis.text.x = element_text(size=rel(1.3),family="notosanskr",colour="black",vjust=rel(10)),
+        axis.text.x = element_text(size=rel(1.3),family="notosanskr",colour="black",vjust=rel(5)),
         axis.text.y = element_text(size=rel(1.5),face="bold",family="notosanskr",colour="black"))
-ggsave(plot.dur.users,"png",filename="dur.of.service.users.dodge.png",scale=1,width=170,height=120,units=c("mm"),dpi=300,bg="white")
+ggsave(plot.dur.users,"png",filename="dur.of.service.users.dodge.png",scale=1,width=80,height=80,units=c("mm"),dpi=300,bg="white")
 
 tbl.mean.dur.data<-tbl.data %>% dplyr::group_by (sta.nm,Vehicle.types,hh,day) %>% 
   dplyr::summarise(dur.v.use.sta=mean(dur.v.use.sta,na.rm=TRUE)/60) %>% ungroup()
