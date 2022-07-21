@@ -1,23 +1,112 @@
 rm(list=ls())
 setwd("d:/WORKSPACE/GIT/KRILA.brief.2022/code")
 data.path<-"d:/WORKSPACE/GIT/KRILA.brief.2022/data/"
+Sys.setlocale(category="LC_ALL", locale = "Korean")
 
 ##service areas with admin boundary and motorway
 require(sf)
-p.service<-st_read(paste0(data.path,"service.station.geojson"))
+p.service<-st_read(paste0(data.path,"service.station.geojson"),options="ENCODING=EUC-KR")
 p.service<-st_transform(p.service,5179)
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of bd9ce92 (Final)
+a.admin.gu<-st_read(paste0(data.path,"admin.gu.geojson"),options="ENCODING=EUC-KR")
+a.admin.gu<-st_transform(a.admin.gu,5179)
+
+a.admin.si<-st_read(paste0(data.path,"admin.si.geojson"),options="ENCODING=EUC-KR")
+a.admin.si<-st_transform(a.admin.si,5179)
+
+p.highpass.ic<-st_read((paste0(data.path,"highpass.ic.geojson")),options="ENCODING=EUC-KR")
+<<<<<<< HEAD
+=======
 a.admin.gu<-st_read(paste0(data.path,"simple.sigungu.admin.geojson"))
 a.admin.gu<-st_transform(a.admin.gu,5179)
 
 p.highpass.ic<-st_read((paste0(data.path,"highpass.ic.geojson")))
+>>>>>>> parent of 2e0212e (Final update)
+=======
+>>>>>>> parent of bd9ce92 (Final)
 p.highpass.ic<-st_transform(p.highpass.ic,5179)
 
-p.rail.station<-st_read((paste0(data.path,"rail.station.geojson")))
+p.rail.station<-st_read((paste0(data.path,"rail.station.geojson")),options="ENCODING=EUC-KR")
 p.rail.station<-st_transform(p.rail.station,5179)
 
 require(dplyr)
 p.service<-p.service[-grep("졸음",p.service$serviceAre_1)]
+require(rgeos)
+near.rail.sta<-as.data.frame(gDistance(as(p.rail.station,"Spatial"), as(p.service,"Spatial"),byid=TRUE))
+min.d <- as.data.frame(apply(near.rail.sta, 1, function(x) order(x, decreasing=F)[2]));colnames(min.d)<-"rail.sta.id"
+p.service<-cbind(p.service,min.d)
+p.rail.station$rail.sta.id<-rownames(p.rail.station)
+
+service.sta.cen<-data.frame(as(p.service,"Spatial"))
+service.sta.cen<-service.sta.cen[c("coords.x1","coords.x2")];colnames(service.sta.cen)<-c("from.x","from.y")
+
+rail.sta.cen<-data.frame(as(p.rail.station,"Spatial"))
+rail.sta.cen<-rail.sta.cen[c("rail.sta.id","coords.x1","coords.x2")];colnames(rail.sta.cen)<-c("rail.sta.id","to.x","to.y")
+rail.sta.cen$rail.sta.id<-as.numeric(rail.sta.cen$rail.sta.id)
+
+service.sta.cen<-cbind(service.sta.cen,min.d)
+service.sta.cen<-left_join(service.sta.cen,rail.sta.cen,by=c("rail.sta.id"))
+service.sta.cen<-service.sta.cen[c(-3)]
+
+rows <- split(service.sta.cen, seq(nrow(service.sta.cen)))
+lines <- lapply(rows, function(row) {
+  lmat <- matrix(unlist(row[1:4]), ncol = 2, byrow = TRUE)
+  st_linestring(lmat)
+})
+od.lines<-st_as_sf(st_sfc(lines,crs=5179),crs=5179)
+od.lines$id<-rownames(od.lines);min.d$id<-rownames(min.d)
+od.lines<-left_join(od.lines,min.d,by=c("id"))
+
+require(stplanr)
+require(osrm)
+od.lines.lat<-st_transform(od.lines,4326)
+od.lines.lat.coord=od_coords(od.lines.lat)
+from=od.lines.lat.coord[, 1:2]
+to=od.lines.lat.coord[, 3:4]
+car.trans.network = route(from, to, route_fun = route_osrm, osrm.profile = "car")
+car.trans.network<-st_transform(car.trans.network,5179)
+
+
+require(ggplot2)
+require(RColorBrewer)
+require(classInt)
+require(maptools)
+require(ggrepel)
+require(scales)
+require(rgdal)
+require(ggspatial)
+require(showtext)
+font_add_google("Noto Sans KR", "notosanskr")
+showtext_auto()
+
+map.service<-ggplot()+ geom_sf(data=p.rail.station,aes(colour="고속철도 역"),size=rel(0.3),show.legend="point")+
+  geom_sf(data=a.admin.gu,fill=NA,color="grey40",size=rel(0.2),show.legend=FALSE)+
+  geom_sf(data=a.admin.si,fill=NA,color="grey20",size=rel(0.5),show.legend=FALSE)+
+  geom_sf(data=car.trans.network,fill=NA,aes(colour="환승구간"),size=rel(0.3),show.legend="point")+
+  geom_sf(data=p.service,aes(colour="고속도로 휴게소"),size=rel(0.5),show.legend="line")+
+  geom_sf(data=p.highpass.ic,aes(colour="하이패스 IC 휴게소"),size=rel(0.5),show.legend = "point")+
+  labs(col="주요 교통시설 입지")+
+  scale_colour_manual(values=c("하이패스 IC 휴게소"="red","고속도로 휴게소"="blue","고속철도 역"="#C77CFF","환승구간"="green3"))+
+  guides(colour=guide_legend(override.aes = list(size=4,shape=20)))+
+  theme_minimal()+
+  #geom_text_repel(data=a.admin.si,aes(label = CTP_KOR_NM,geometry= geometry), colour = "black")+
+  theme(legend.key.size = unit(0.5, 'cm'),
+        text = element_text(size = rel(5),family="notosanskr"),
+        legend.position = "top",plot.title = element_text(size =rel(2),family="notosanskr",face = "bold"),
+        legend.title=element_text(size=rel(6),family="notosanskr",face="bold"), legend.text=element_text(size=rel(4),family="notosanskr"))+
+  annotation_scale(location = "br", height = unit(0.3, "cm"))+
+  annotation_scale(location = "br", height = unit(0.3, "cm"))+
+  annotation_north_arrow(location = "tl", 
+                         style = north_arrow_nautical, 
+                         height = unit(0.75, "cm"),
+                         width = unit(0.75, "cm"))
+<<<<<<< HEAD
+ggsave(map.service,"png",filename="location.map.png",scale=1,width=150,height=100,units=c("mm"),dpi=300,bg="white")
+=======
 
 require(leaflet)
 
@@ -87,3 +176,7 @@ leaflet() %>% addProviderTiles('CartoDB.Positron') %>%
                       "11 June 2021 (Fri)","12 June 2021 (Sat)","13 June 2021 (Sun)","14 June 2021 (Mon)"),
     options = layersControlOptions(collapsed = FALSE)
   )
+>>>>>>> parent of 2e0212e (Final update)
+=======
+ggsave(map.service,"png",filename="location.map.png",scale=1,width=150,height=100,units=c("mm"),dpi=300,bg="white")
+>>>>>>> parent of bd9ce92 (Final)
